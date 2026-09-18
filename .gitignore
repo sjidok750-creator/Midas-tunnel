@@ -1,0 +1,18 @@
+# 발주처 원자료·NX 바이너리·납품물은 올리지 않는다
+*.dwg
+*.dxf
+*.mcb
+*.nfxp
+*.blk
+*.hwpx
+*.hwp
+*.xlsx
+*.docx
+*.bak
+projects/*/dxf/
+projects/*/_oda_in/
+projects/*/report/
+__pycache__/
+*.pyc
+*.log
+Thumbs.db

@@ -1,0 +1,3 @@
+[submodule "core"]
+	path = core
+	url = https://github.com/sjidok750-creator/Midas-core.git
