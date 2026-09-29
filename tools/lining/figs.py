@@ -242,7 +242,7 @@ def sf(prj):
         ax.text(r[1] + 0.03, v, "%.2f" % r[1], va="center", fontsize=9)
     ax.axvline(1.0, color=RED, lw=1.2, zorder=3)
     ax.set_xlim(0.6, max(r[1] for r in rows) * 1.12); ax.set_yticks(y); ax.set_yticklabels([r[0] for r in rows], fontsize=9.5)
-    ax.set_xlabel("안전율 SF = 설계강도 / 소요강도 (fck %g MPa)" % prj.fck)
+    ax.set_xlabel(_cfg(prj).get("sf_xlabel", "안전율 SF = 설계강도 / 소요강도"))      # 강도 등 판단 사항은 그림 아래 주석으로
     ax.grid(axis="x", color=GRID, lw=0.6); ax.set_axisbelow(True)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)

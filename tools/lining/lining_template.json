@@ -36,7 +36,7 @@
   {"tag": "P-1", "pattern": "P-1", "sup": "pin"},
   {"tag": "P-1_spr_v", "pattern": "P-1", "sup": "spring", "pv_mode": "vertical"}
  ],
- "report": {"main": ["P-1_spr"], "pin": ["P-1"], "bc": ["P-1", "P-1_spr", "P-1_spr_v"], "arch_t": "(확인 필요) 아치부 두께 m"},
+ "report": {"_설명": "main = 보고서 해석(적용 조건). pin·bc = 설계 조건(힌지)·민감도 비교용 — 보고서에 실을지는 건별로 대표님께 여쭙는다", "main": ["P-1_spr"], "pin": ["P-1"], "bc": ["P-1", "P-1_spr", "P-1_spr_v"], "arch_t": "(확인 필요) 아치부 두께 m"},
  "figs": {"model_tag": "P-1_spr", "loads_tag": "P-1_spr", "pm_tag": "(확인 필요) 철근 패턴 태그 — 없으면 figs 에서 pm 을 빼고 실행",
           "model_foot_text": "측벽 하단(공동구 시공이음부): 라이닝 축선 방향 압축전용 단부 스프링"},
  "location": {"_설명": "검토 위치도 상수 — location.py 머리말의 찾는 법 참고. 쓰지 않으면 location 명령만 빼면 된다.", "dxf": "(확인 필요)"},
