@@ -3,7 +3,7 @@
 검토 위치도 — 실시설계 평면·종단면도 배치(layout)의 도곽 전체를 플롯처럼 흑백으로 출력하고 검토 구간을 표기한다.
 출력: <프로젝트>/runs/fig/rpt_location.png  (lining.json "location")
 
-손으로 넣는 상수와 찾는 법(읍애터널 값은 projects/읍애터널/lining.json 참고)
+손으로 넣는 상수와 찾는 법(실증 프로젝트 lining.json 참고 — 로컬)
   sheets[].x0, s0, s1   종단면 측점표 '측점' 행 문자의 x 와 그 측점(20 m 간격) → x = x0 + (STA − s0). 시트마다.
   sheets[].el_offset    종단면 표고 축 문자(예 "250.00")의 y 로: y = EL − el_offset
   sheets[].frame        도곽: 배치의 INSERT '도각'(또는 '도각박스') virtual_entities 중 CX-BORD-LIN1 폴리라인 범위 ± 3 mm
@@ -11,7 +11,7 @@
   ground_row            측점표 '지반고' 행의 y 범위(세로쓰기 문자 rotation 90)
   grade                 계획고 = el0 + slope·(STA − sta0) (측점표 '계획고' 행으로 확인)
   crown_above_grade     라이닝 외면 천단고 − 계획고, invert_below_grade  계획고 − 인버트(기초 저면)
-주의: ColorPolicy 는 MONOCHROME_LIGHT_BG — COLOR_SWAP_BW 는 종단 지반선을 지운다(2026-09-29 읍애).
+주의: ColorPolicy 는 MONOCHROME_LIGHT_BG — COLOR_SWAP_BW 는 종단 지반선을 지운다(2026-09 실증).
 """
 import os, time, re, bisect
 import ezdxf

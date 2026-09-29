@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-라이닝 단면검토 — 콘크리트구조기준(2012) 강도설계법(읍애터널 설계 구조계산서 §3.1.1 다. 와 같은 체계).
+라이닝 단면검토 — 콘크리트구조기준(2012) 강도설계법(설계 구조계산서와 같은 체계로 검토할 때).
 
 무근:  압축  Pu/(φ·0.60·fck·[1-(lc/32h)²]·A1) + Mu/(φ·0.85·fck·S) ≤ 1   (φ, lc 는 lining.json "check.plain")
        인장  Mu/S − Pu/Ag ≤ 0.42·φ·λ·√fck
@@ -9,36 +9,32 @@
        P-M: 편심 e=M/P 고정 선상 공칭강도, φ=0.65(압축지배)~0.85, φPn ≤ 0.80·0.65·Pn0
        전단 φVc = 0.75·(1/6)(1+Nu/14Ag)·λ·√fck·b·d
        균열(사용): s ≤ min(375(210/fs)−2.5Cc, 300(210/fs))
-역검산(읍애 설계값): 무근 아치 0.554 / −1.125 MPa / φVn 94.31, RC φPn 4324.5 — `python -m lining selftest`.
+역검산: lining.json "selftest" 에 설계 구조계산서 값을 넣고 `python -m lining selftest` — 식이 설계와 같은지 확인.
 등급: 세부지침(안전점검·진단, 터널편) [표 2.18] — SF = 설계강도/소요강도.
 """
 import math
 from . import post as LP
 
-# 기본값 = 읍애터널(설계서 값). configure(prj) 가 lining.json 으로 바꾼다.
-FY, ES, ECU = 400.0, 200000.0, 0.003
-AS = 2292.0
-DC = 60.0
-CC_CLR = 60.0 - 19.0 / 2
-N_MOD = 7
-S_BAR = 125.0
+# 프로젝트 값은 configure(prj) 가 lining.json 에서 채운다 — 기본값으로 조용히 계산하지 않도록 None 으로 둔다.
+ES, ECU = 200000.0, 0.003
+FY = AS = DC = CC_CLR = N_MOD = S_BAR = None
 LAM = 1.0
-PHI_PLAIN, LC = 0.55, 0.5
-RC_SECT = set()
-STRENGTH = {"C1", "C2", "C3", "C4", "C2N"}
-SERVICE = {"C5", "C6", "C7"}
+PHI_PLAIN = LC = None
+RC_SECT = None
+STRENGTH = SERVICE = None
 
 
 def configure(prj):
     global FY, ES, AS, DC, CC_CLR, N_MOD, S_BAR, LAM, PHI_PLAIN, LC, RC_SECT, STRENGTH, SERVICE
     ck = prj.check
     rc = ck.get("rc", {})
-    FY = rc.get("fy", FY); ES = rc.get("Es", ES); AS = rc.get("As", AS); DC = rc.get("dc", DC)
-    CC_CLR = DC - rc.get("bar", 19.0) / 2; N_MOD = rc.get("n_mod", N_MOD); S_BAR = rc.get("s_bar", S_BAR)
-    pl = ck.get("plain", {})
-    PHI_PLAIN = pl.get("phi", PHI_PLAIN); LC = pl.get("lc", LC); LAM = ck.get("lambda", LAM)
     RC_SECT = prj.rc_patterns()
-    STRENGTH = set(ck.get("strength_cases", STRENGTH)); SERVICE = set(ck.get("service_cases", SERVICE))
+    if RC_SECT:                                            # 철근 패턴이 있을 때만 철근 제원이 필요하다
+        FY = rc["fy"]; ES = rc.get("Es", 200000.0); AS = rc["As"]; DC = rc["dc"]
+        CC_CLR = DC - rc["bar"] / 2; N_MOD = rc["n_mod"]; S_BAR = rc["s_bar"]
+    pl = ck["plain"]
+    PHI_PLAIN = pl["phi"]; LC = pl["lc"]; LAM = ck.get("lambda", 1.0)
+    STRENGTH = set(ck["strength_cases"]); SERVICE = set(ck["service_cases"])
 
 
 def plain(N, M, V, h, fck, phi=None, lc=None):
@@ -155,6 +151,7 @@ def sf_grade(ratio, damaged=None):
 
 
 def check_run(prj, tag, fcks=None):
+    configure(prj)                                         # 호출자가 잊어도 프로젝트 값으로 검토
     fcks = fcks or (prj.fck,)
     R = LP.load(prj.result_path(tag))
     sec = R["sec"]; rc = sec in RC_SECT
@@ -186,11 +183,14 @@ def check_run(prj, tag, fcks=None):
 
 
 def selftest(prj=None):
-    """설계 구조계산서 값 역검산(lining.json "selftest" 가 있으면 그 값으로)"""
-    st = (prj.cfg.get("selftest") if prj else None) or {
-        "plain": [1006.0, 33.42, 57.88, 0.30, 27.0, "무근 아치 P-4 C2: 압축 0.554, 인장 -1.125/1.200, φVn 94.310"],
-        "rc_pm": [2228.73, 72.86, 0.30, 27.0, "RC 아치 P-5 C2: φPn 4324.500, c 287.75"],
-        "rc_shear": [2228.73, 127.12, 0.30, 27.0, "RC 전단 φVc 238.605"]}
-    p = plain(*st["plain"][:5]); print("[역검산] 압축 %.3f 인장 %.3f MPa φVn %.2f  | 설계 %s" % (p["comp"], p["ft"], p["phiVn"], st["plain"][5]))
-    q = rc_pm(*st["rc_pm"][:4]); print("[역검산] φPn %.1f c %.1f φ %.2f  | 설계 %s" % (q["phiPn"], q["c"], q["phi"], st["rc_pm"][4]))
-    s = rc_shear(*st["rc_shear"][:4]); print("[역검산] φVc %.3f  | 설계 %s" % (s["phiVc"], st["rc_shear"][4]))
+    """설계 구조계산서 값 역검산 — lining.json "selftest": {"plain": [N, M, V, h, fck, 설계값 설명], "rc_pm": [N, M, h, fck, 설명], "rc_shear": [N, V, h, fck, 설명]}"""
+    configure(prj)
+    st = prj.cfg.get("selftest") or {}
+    if not st:
+        print("lining.json 에 selftest 값이 없다 — 설계 구조계산서의 검토 행(단면력·설계강도)을 넣는다"); return
+    if "plain" in st:
+        p = plain(*st["plain"][:5]); print("[역검산] 압축 %.3f 인장 %.3f MPa φVn %.2f  | 설계 %s" % (p["comp"], p["ft"], p["phiVn"], st["plain"][5]))
+    if "rc_pm" in st:
+        q = rc_pm(*st["rc_pm"][:4]); print("[역검산] φPn %.1f c %.1f φ %.2f  | 설계 %s" % (q["phiPn"], q["c"], q["phi"], st["rc_pm"][4]))
+    if "rc_shear" in st:
+        s = rc_shear(*st["rc_shear"][:4]); print("[역검산] φVc %.3f  | 설계 %s" % (s["phiVc"], st["rc_shear"][4]))

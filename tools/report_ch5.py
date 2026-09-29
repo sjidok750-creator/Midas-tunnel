@@ -2,9 +2,9 @@
 """
 보고서 장(hwpx) 조립 도우미 — 양식 hwpx 의 문단·표·그림·수식 개체를 복제해 내용만 바꾼다(한글 편집 지침 v2~v3.4).
 
-  from report_ch5 import B, ro, jo, scrub_package, finish, replace_text_everywhere, TMAP_JEOKSEONG
+  from report_ch5 import B, ro, jo, scrub_package, finish, replace_text_everywhere, TMAP_TEMPLATE1
   doc = Hwpx(양식); doc.load(); ps = doc.paragraphs()
-  b = B(doc, ps)            # 양식 문단 번호(tmap)는 양식마다 다르다 — TMAP_JEOKSEONG 은 적성터널(춘천) 5장 예제 기준
+  b = B(doc, ps)            # 양식 문단 번호(tmap)는 양식마다 다르다 — TMAP_TEMPLATE1 은 실증에 쓴 터널 5장 양식 기준
   b.anchor = ps[11]         # 이 문단 뒤에 이어 쓴다
   b.h1("개요"); b.tga("…"); b.table("표제목", [[머리행], [행]…], widths=[…], merges=[(r0,c0,r1,c1)], key="loc"); b.fig(png, "그림제목", key="…")
   본문에서 그림·표 참조는 "[그림 §F:키§]", "[표 §T:키§]과" 처럼 쓰면 resolve() 가 번호와 조사(와/과)를 채운다.
@@ -23,8 +23,8 @@ from hwpx_table import (new_table, new_para, insert_after, fix_layout, merge_cel
                         set_table_lines, autosize_table, keep_with_next, commit_header)
 from PIL import Image
 
-# 적성터널(춘천) 5장 예제 hwpx 의 문단 번호 → 복제할 서식(h1 장·h2 절·h3 가.·h4 1)·h5 ①, b* 본문, tcap 표제목, tbl 표, fig·figcap 그림, eq 수식)
-TMAP_JEOKSEONG = dict(h1=12, h2=13, h3=14, h4=49, h5=52, b11=40, bga=15, b1=109, b5=264, note=29, tcap=27, tbl=313, flow=18, flowcap=19,
+# 실증에 쓴 터널 5장 양식 hwpx 의 문단 번호 → 복제할 서식(h1 장·h2 절·h3 가.·h4 1)·h5 ①, b* 본문, tcap 표제목, tbl 표, fig·figcap 그림, eq 수식)
+TMAP_TEMPLATE1 = dict(h1=12, h2=13, h3=14, h4=49, h5=52, b11=40, bga=15, b1=109, b5=264, note=29, tcap=27, tbl=313, flow=18, flowcap=19,
                       fig=227, figcap=228, sp=20, eq=251, eqt=265, crit=28)
 
 
@@ -84,7 +84,7 @@ class B:
         self.doc = doc
         self.chap = chap
         g = lambda i: copy.deepcopy(ps[i])
-        self.T = {k: g(i) for k, i in (tmap or TMAP_JEOKSEONG).items()}
+        self.T = {k: g(i) for k, i in (tmap or TMAP_TEMPLATE1).items()}
         self.anchor = None
         self.sizes = []
         self.num = {"F": 0, "T": 0}; self.lab = {}

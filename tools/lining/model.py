@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-라이닝 빔-스프링 모델 — MIDAS CIVIL NX (Open API).  (읍애터널 lining_model.py 를 프로젝트 입력 방식으로 일반화)
+라이닝 빔-스프링 모델 — MIDAS CIVIL NX (Open API).  (실증 프로젝트 스크립트를 프로젝트 입력 방식으로 일반화)
 
 - 형상: geom.build(prj) (표준단면도 원호)
 - 지반: 절점별 법선방향 압축전용 탄성링크(COMP), k = Ks × 분담길이 × 1.0 m, 지반절점 link_len 외측 고정

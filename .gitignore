@@ -20,3 +20,5 @@ Thumbs.db
 # 터널별 작업 폴더는 로컬 전용(공개 저장소 — 설계서 추출본·결과·보고서 본문)
 projects/*
 !projects/README.md
+# 9/18 원형 — 실증 프로젝트 설계값이 들어 있어 로컬 전용
+tools/_prototype_0918/
