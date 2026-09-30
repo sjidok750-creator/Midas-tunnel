@@ -22,6 +22,7 @@ python -m lining capture <터널명>        # 하중조합별 NX 부재력도 �
 python -m lining data <터널명>           # runs/report_data.json (지배값·안전율·반력·포락)
 python -m lining figs <터널명>           # 모델도·하중재하도·해석결과도·P-M·안전율
 python -m lining location <터널명>       # 검토 위치도(실제 평면·종단면도 도곽 위에 표기)
+python -m lining umd <터널명> <태그> [부재…]  # midas UMD(RC/Wall) 계수하중 붙여넣기 표·단면 설정값 → P-M 그림은 core/tools/umd_pm.py
 ```
 보고서 본문은 터널마다 스크립트를 쓴다 — `tools/report_ch5.py`(양식 hwpx 복제·표·그림·수식·자동번호·메타데이터) 위에 본문만.
 
@@ -30,7 +31,7 @@ python -m lining location <터널명>       # 검토 위치도(실제 평면·�
 | 폴더 | 내용 |
 |---|---|
 | `core/` | 서브모듈. `core/tools`(NX API·MCT·DXF·HWPX·HWP 판독), `core/references`(설계기준) |
-| `tools/lining/` | 엔진: `project`(입력·파생값·(확인 필요) 점검), `geom`(3심원 원호 → 격자), `model`(MCT·COMP 링크·단부 스프링·온도·해석·결과표), `post`, `check`(KCI 2012 무근·RC P-M·균열, 세부지침 등급), `data`, `figs`, `capture`, `location`, `lining_template.json` |
+| `tools/lining/` | 엔진: `project`(입력·파생값·(확인 필요) 점검), `geom`(3심원 원호 → 격자), `model`(MCT·COMP 링크·단부 스프링·온도·해석·결과표), `post`, `check`(KCI 2012 무근·RC P-M·균열, 세부지침 등급), `data`, `figs`, `capture`, `location`, `umd`(UMD 입력 표), `lining_template.json` |
 | `tools/report_ch5.py` | 보고서 장 조립 도우미 |
 | `projects/<터널>/` | **로컬 전용**(설계서 추출본·결과·보고서 본문 — 저장소에 올리지 않음) |
 

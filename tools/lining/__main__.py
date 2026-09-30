@@ -13,6 +13,7 @@
   python -m lining data <프로젝트>                # runs/report_data.json
   python -m lining figs <프로젝트> [model loads forces pm sf]
   python -m lining location <프로젝트>            # 검토 위치도(실제 도면 위 표기)
+  python -m lining umd <프로젝트> <태그> [부재…]   # midas UMD(RC/Wall) 계수하중 표(붙여넣기 TSV)·단면 설정값
 <프로젝트> 는 폴더 경로 또는 projects/ 아래 이름.
 """
 import sys, os, json, shutil
@@ -92,6 +93,9 @@ def main(argv):
     elif cmd == "location":
         from . import location
         location.make(prj)
+    elif cmd == "umd":
+        from . import umd
+        umd.make(prj, tags[0], [int(x) for x in tags[1:]])
     else:
         raise SystemExit("모르는 명령: %s\n%s" % (cmd, __doc__))
 
