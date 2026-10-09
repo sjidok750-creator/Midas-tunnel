@@ -1,5 +1,7 @@
 # Midas-tunnel — 터널 콘크리트 라이닝 안전성평가 자동화
 
+> 엔진 전체 지도(형식별 엔진·검증 현황·프로젝트 등록부·공통 규약): **`core/ENGINES.md`** (원본 `D:\Midas-core\ENGINES.md`).
+
 설계서·도면에서 해석조건을 읽어 **이 PC의 MIDAS CIVIL NX를 Open API로 직접 조작**해 빔-스프링(보 요소 + 압축전용 지반스프링) 모델을 만들고 해석한 뒤, 라이닝 단면을 검토하고(무근·철근, 세부지침 안전율·등급) 삽도와 보고서 5장(hwpx)을 만든다.
 
 공통 도구·설계기준·Claude 운용 규칙은 서브모듈 **`core/`**(= [Midas-core](https://github.com/sjidok750-creator/Midas-core)). 교량은 [Midas-nx](https://github.com/sjidok750-creator/Midas-nx).
